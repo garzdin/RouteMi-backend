@@ -90,7 +90,7 @@ app.post('/authenticate', function(request, response) {
     } else if(user) {
       if(user.apiKey) {
         response.send({
-          success: false,
+          success: true,
           token: user.apiKey
         });
       } else {
