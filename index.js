@@ -8,7 +8,8 @@ try {
 } catch (error) {
   var config;
 }
-var Kitten = require('./models/kitten.js');
+var passwordEncryption = require('./utils/passwordEncryption.js');
+var User = require('./models/user.js');
 
 mongoose.connect(process.env.MONGOLAB_URL || config.mongolab_url);
 
@@ -30,8 +31,30 @@ app.get('/', function(request, response) {
 });
 
 app.get('/authenticate', function(request, response) {
-  var token = jwt.sign('RouteMiApiJWT', app.get('tokenKey'));
-  response.send({ token: token });
+  User.findOne({ username: request.body.username }, function(error, user) {
+    if(error) {
+      response.send({
+        success: false,
+        message: "User not found"
+      });
+    } else {
+      passwordEncryption.comparePassword(request.body.password, user.password, function(error, isValid) {
+        if(isValid) {
+          var token = jwt.sign(user, app.get('tokenKey'));
+          user.apiKey = token;
+          response.send({
+            success: true,
+            token: token
+          });
+        } else {
+          response.send({
+            success: false,
+            message: "Wrong password"
+          });
+        }
+      });
+    }
+  });
 });
 
 app.use(function(request, response, next) {
@@ -51,30 +74,6 @@ app.use(function(request, response, next) {
         message: 'No token provided.'
     });
   }
-});
-
-app.post('/kitten', function(request, response) {
-  if(request.body.name) {
-    var fluffy = new Kitten({ name: request.body.name });
-    fluffy.save(function(error, fluffy) {
-      if(error) return response.send({ error: error });
-      response.send({ response: "Kitten saved successfully" });
-    });
-  } else {
-    response.send({ error: "You didn't supply a name" });
-  }
-});
-
-app.get('/kittens', function(request, response) {
-  Kitten.find({}, function(error, kittens) {
-    var kittensMap = {};
-
-    kittens.forEach(function(kitten) {
-      kittensMap[kitten._id] = kitten;
-    });
-
-    response.send({ kittens: kittensMap });
-  });
 });
 
 app.listen(app.get('port'), function() {
