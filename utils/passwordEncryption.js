@@ -1,21 +1,19 @@
 var bcrypt = require('bcrypt-nodejs');
 
 exports.cryptPassword = function(password, callback) {
-   bcrypt.genSalt(10, function(err, salt) {
-    if (err)
-      return callback(err);
-
-    bcrypt.hash(password, salt, function(err, hash) {
-      return callback(err, hash);
+    bcrypt.hash(password, 10, function(error, hash) {
+      if(error) {
+        return callback(error, null);
+      }
+      return callback(null, hash);
     });
-
-  });
 };
 
 exports.comparePassword = function(password, userPassword, callback) {
-   bcrypt.compare(password, userPassword, function(err, isPasswordMatch) {
-      if (err)
-        return callback(err);
+   bcrypt.compare(password, userPassword, function(error, isPasswordMatch) {
+      if(error) {
+        return callback(error, null);
+      }
       return callback(null, isPasswordMatch);
    });
 };
