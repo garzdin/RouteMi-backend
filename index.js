@@ -91,7 +91,7 @@ app.post('/authenticate', function(request, response) {
       if(user.apiKey) {
         response.send({
           success: false,
-          message: "User already has an API key."
+          token: user.apiKey
         });
       } else {
         passwordEncryption.comparePassword(request.body.password, user.password, function(error, isValid) {
