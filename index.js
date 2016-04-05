@@ -80,7 +80,7 @@ app.post('/authenticate', authenticationModule);
 app.use(tokenMiddleware);
 
 app.post('/account/login', function(request, response) {
-  if(!request.body.username, !request.body.password) {
+  if(!request.body.username || !request.body.password) {
     return response.send({
       success: false,
       message: "Provide a username and a password."
