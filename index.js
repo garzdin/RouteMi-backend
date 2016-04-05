@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 try {
   var config = require('./config.json');
 } catch (error) {
-  console.log(error);
+  var config;
 }
 var Kitten = require('./models/kitten.js');
 
