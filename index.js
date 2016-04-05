@@ -118,7 +118,6 @@ app.post('/authenticate', function(request, response) {
           });
         }
       });
-      }
     } else {
       response.send({
         success: false,
