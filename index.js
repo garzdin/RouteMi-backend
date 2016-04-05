@@ -38,8 +38,6 @@ app.post('/register', function(request, response) {
     });
   } else {
     passwordEncryption.cryptPassword(request.body.password, function(error, hashedPassword) {
-      console.log(hashedPassword);
-      console.log(error);
       if(error) {
         response.send({
           success: false,
@@ -50,8 +48,8 @@ app.post('/register', function(request, response) {
           username: request.body.username,
           password: hashedPassword,
           email: request.body.email,
-          dateRegistered: Date.now,
-          lastActive: Date.now,
+          dateRegistered: Date.now(),
+          lastActive: Date.now(),
           isActive: true
         }).save(function(error) {
           if(error) {
