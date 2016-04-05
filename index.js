@@ -38,6 +38,8 @@ app.post('/register', function(request, response) {
     });
   } else {
     passwordEncryption.cryptPassword(request.body.password, function(error, hashedPassword) {
+      console.log(hashedPassword);
+      console.log(error);
       if(error) {
         response.send({
           success: false,
