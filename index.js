@@ -3,10 +3,13 @@ var app = express();
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
-mongoose.connect(process.env.MONGOLAB_URL || 'mongodb://apiuser:4pv-aeh-PbH-Btw@ds013300.mlab.com:13300/routemiapi');
+var config = require('./config.json');
 var Kitten = require('./models/kitten.js');
 
+mongoose.connect(process.env.MONGOLAB_URL || config.mongolab_url);
+
 var db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('Successfully connected to MongoLab.');
@@ -16,8 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.set('port', (process.env.PORT || 5000));
-
-app.set('tokenKey', process.env.TOKENKEY || 'Q353oF8Dp4NX51XJwdG7sIaI43l4JXyeRDClR0TYR5aPKBcUleRkyyprgQBR79U');
+app.set('tokenKey', process.env.TOKENKEY || config.jwt_sign_key);
 
 app.get('/', function(request, response) {
   response.send({ response: "Welcome to the API." })
@@ -72,5 +74,5 @@ app.get('/kittens', function(request, response) {
 });
 
 app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+  console.log('RouteMiAPI app is running on port', app.get('port'));
 });
