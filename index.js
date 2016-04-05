@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
 mongoose.connect(process.env.MONGOLAB_URL || 'mongodb://apiuser:4pv-aeh-PbH-Btw@ds013300.mlab.com:13300/routemiapi');
+var Kitten = require('./models/kitten.js');
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
