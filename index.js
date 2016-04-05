@@ -30,7 +30,7 @@ app.get('/', function(request, response) {
   return response.send({ response: "Welcome to the API." })
 });
 
-app.post('/register', function(request, response) {
+app.post('/account/create', function(request, response) {
   if(!request.body.username || !request.body.password || !request.body.email) {
     return response.send({
       success: false,
@@ -144,6 +144,47 @@ app.use(function(request, response, next) {
         message: 'No token provided.'
     });
   }
+});
+
+app.post('/account/login', function(request, response) {
+  if(!request.body.username, !request.body.password) {
+    return response.send({
+      success: false,
+      message: "Provide a username and a password."
+    });
+  }
+  User.findOne({ username: request.body.username }, function(error, user) {
+    if(error) {
+      return response.send({
+        success: false,
+        message: error
+      });
+    } else if(user) {
+      passwordEncryption.comparePassword(request.body.password, user.password, function(error, isValid) {
+        if(error) {
+          return response.send({
+            success: false,
+            message: "Password validation error."
+          });
+        } else if(isValid) {
+          return response.send({
+            success: true,
+            message: "Logged in successfully."
+          });
+        } else {
+          return response.send({
+            success: false,
+            message: "Wrong password."
+          });
+        }
+      });
+    } else {
+      return response.send({
+        success: false,
+        message: "User not found."
+      });
+    }
+  });
 });
 
 app.listen(app.get('port'), function() {
