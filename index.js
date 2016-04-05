@@ -3,7 +3,11 @@ var app = express();
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
-var config = require('./config.json');
+try {
+  var config = require('./config.json');
+} catch (error) {
+  console.log(error);
+}
 var Kitten = require('./models/kitten.js');
 
 mongoose.connect(process.env.MONGOLAB_URL || config.mongolab_url);
