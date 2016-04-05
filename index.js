@@ -88,14 +88,14 @@ app.post('/authenticate', function(request, response) {
         message: error
       });
     } else if(user) {
-      if(user.apiKey) {
-        response.send({
-          success: true,
-          token: user.apiKey
-        });
-      } else {
-        passwordEncryption.comparePassword(request.body.password, user.password, function(error, isValid) {
-          if(isValid) {
+      passwordEncryption.comparePassword(request.body.password, user.password, function(error, isValid) {
+        if(isValid) {
+          if(user.apiKey) {
+            response.send({
+              success: true,
+              token: user.apiKey
+            });
+          } else {
             var token = jwt.sign(user, app.get('tokenKey'));
             user.apiKey = token;
             user.save(function(error) {
@@ -110,13 +110,14 @@ app.post('/authenticate', function(request, response) {
               success: true,
               token: token
             });
-          } else {
-            response.send({
-              success: false,
-              message: "Wrong password."
-            });
           }
-        });
+        } else {
+          response.send({
+            success: false,
+            message: "Wrong password."
+          });
+        }
+      });
       }
     } else {
       response.send({
