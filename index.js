@@ -37,6 +37,7 @@ app.post('/register', function(request, response) {
       message: "Provide a username, a password and an email."
     });
   } else {
+    var password = "";
     passwordEncryption.cryptPassword(request.body.password, function(error, hashedPassword) {
       if(error) {
         response.send({
@@ -44,29 +45,35 @@ app.post('/register', function(request, response) {
           message: error
         });
       } else if(hashedPassword) {
-        var user = new User({
-          username: request.body.username,
-          password: hashedPassword,
-          email: request.body.email,
-          dateRegistered: Date.now,
-          lastActive: Date.now,
-          isActive: true
-        });
-        user.save(function(error) {
-          if(error) {
-            response.send({
-              success: false,
-              message: error
-            });
-          }
-        });
-        user.apiKey = jwt.sign(user, app.get('tokenKey'));
+        password = hashedPassword;
       } else {
         response.send({
           success: false,
           message: "Invalid password."
         });
       }
+    });
+    var user = new User({
+      username: request.body.username,
+      password: password,
+      email: request.body.email,
+      dateRegistered: Date.now,
+      lastActive: Date.now,
+      isActive: true
+    });
+    user.save(function(error) {
+      if(error) {
+        response.send({
+          success: false,
+          message: error
+        });
+      }
+    });
+    user.apiKey = jwt.sign(user, app.get('tokenKey'));
+    response.send({
+      success: true,
+      message: "User created successfully.",
+      token: user.apiKey
     });
   }
 });
