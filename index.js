@@ -27,19 +27,19 @@ app.set('port', (process.env.PORT || 5000));
 app.set('tokenKey', process.env.TOKENKEY || config.jwt_sign_key);
 
 app.get('/', function(request, response) {
-  response.send({ response: "Welcome to the API." })
+  return response.send({ response: "Welcome to the API." })
 });
 
 app.post('/register', function(request, response) {
   if(!request.body.username || !request.body.password || !request.body.email) {
-    response.send({
+    return response.send({
       success: false,
       message: "Provide a username, a password and an email."
     });
   } else {
     passwordEncryption.cryptPassword(request.body.password, function(error, hashedPassword) {
       if(error) {
-        response.send({
+        return response.send({
           success: false,
           message: error
         });
@@ -53,19 +53,19 @@ app.post('/register', function(request, response) {
           isActive: true
         }).save(function(error) {
           if(error) {
-            response.send({
+            return response.send({
               success: false,
               message: error
             });
           } else {
-            response.send({
+            return response.send({
               success: true,
               message: "User created successfully."
             });
           }
         });
       } else {
-        response.send({
+        return response.send({
           success: false,
           message: "Invalid password."
         });
@@ -76,14 +76,14 @@ app.post('/register', function(request, response) {
 
 app.post('/authenticate', function(request, response) {
   if(!request.body.username || !request.body.password) {
-    response.send({
+    return response.send({
       success: false,
       message: "Provide a username and a password."
     });
   }
   User.findOne({ username: request.body.username }, function(error, user) {
     if(error) {
-      response.send({
+      return response.send({
         success: false,
         message: error
       });
@@ -91,7 +91,7 @@ app.post('/authenticate', function(request, response) {
       passwordEncryption.comparePassword(request.body.password, user.password, function(error, isValid) {
         if(isValid) {
           if(user.apiKey) {
-            response.send({
+            return response.send({
               success: true,
               token: user.apiKey
             });
@@ -100,26 +100,26 @@ app.post('/authenticate', function(request, response) {
             user.apiKey = token;
             user.save(function(error) {
               if(error) {
-                response.send({
+                return response.send({
                   success: false,
                   token: error
                 });
               }
             });
-            response.send({
+            return response.send({
               success: true,
               token: token
             });
           }
         } else {
-          response.send({
+          return response.send({
             success: false,
             message: "Wrong password."
           });
         }
       });
     } else {
-      response.send({
+      return response.send({
         success: false,
         message: "User not found."
       });
