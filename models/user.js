@@ -2,19 +2,42 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
-  username: String,
-  password: String,
-  email: String,
-  firstName: String,
-  lastName: String,
-  dateRegistered: Date,
+  username: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  firstName: {
+    type: String
+  },
+  lastName: {
+    type: String
+  },
+  dateRegistered: {
+    type: Date,
+    default: Date.now
+  },
   lastKnownLocation: {
     longitude: Number,
     latitude: Number
   },
-  lastActive: Date,
-  apiKey: String,
-  isActive: Boolean
+  lastActive: {
+    type: Date,
+    default: Date.now
+  },
+  apiKey: {
+    type: String
+  },
+  isActive: {
+    type: Boolean
+  }
 });
 
 module.exports = mongoose.model('User', userSchema);

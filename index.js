@@ -30,6 +30,42 @@ app.get('/', function(request, response) {
   response.send({ response: "Welcome to the API." })
 });
 
+app.post('/register', function(request, response) {
+  if(!request.body.username || !request.body.password || !request.body.email) {
+    response.send({
+      success: false,
+      message: "Provide a username, a password and an email."
+    });
+  } else {
+    passwordEncryption.cryptPassword(request.body.password, function(error, hashedPassword) {
+      if(error) {
+        response.send({
+          success: false,
+          message: error
+        });
+      } else {
+        var user = new User({
+          username: request.body.username,
+          password: hashedPassword,
+          email: request.body.email,
+          dateRegistered: Date.now,
+          lastActive: Date.now,
+          isActive: true
+        });
+        user.save(function(error) {
+          if(error) {
+            response.send({
+              success: false,
+              message: error
+            });
+          }
+        });
+        user.apiKey = jwt.sign(user, app.get('tokenKey'));
+      }
+    });
+  }
+});
+
 app.post('/authenticate', function(request, response) {
   if(!request.body.username || !request.body.password) {
     response.send({
