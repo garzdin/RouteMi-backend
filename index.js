@@ -48,7 +48,7 @@ app.post('/register', function(request, response) {
       } else if(hashedPassword) {
         new User({
           username: request.body.username,
-          password: password,
+          password: hashedPassword,
           email: request.body.email,
           dateRegistered: Date.now,
           lastActive: Date.now,
