@@ -31,7 +31,7 @@ app.get('/authenticate', function(request, response) {
 app.use(function(request, response, next) {
   var token = request.body.token || request.query.token || request.headers['x-access-token'];
   if (token) {
-    jwt.verify(token, app.get('tokenKey'), function(error, decoded) {      
+    jwt.verify(token, app.get('tokenKey'), function(error, decoded) {
       if (error) {
         return response.json({ success: false, message: 'Failed to authenticate token.' });
       } else {
@@ -39,7 +39,6 @@ app.use(function(request, response, next) {
         next();
       }
     });
-
   } else {
     return response.status(403).send({
         success: false,
