@@ -3,18 +3,13 @@ var app = express();
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
-try {
-  var config = require('./config.json');
-} catch (error) {
-  var config;
-}
 var User = require('./models/user.js');
 var passwordEncryption = require('./utils/passwordEncryption.js');
 var tokenMiddleware = require('./middleware/token.js');
 var authenticationModule = require('./routes/authentication.js');
 var accountModule = require('./routes/accounts.js');
 
-mongoose.connect(process.env.MONGOLAB_URL || config.mongolab_url);
+mongoose.connect(process.env.MONGOLAB_URL);
 
 var db = mongoose.connection;
 
@@ -26,7 +21,7 @@ db.once('open', function() {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.set('port', (process.env.PORT || config.local_port));
+app.set('port', (process.env.PORT));
 
 app.get('/', function(request, response) {
   return response.send({ response: "Welcome to the API." })
