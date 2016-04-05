@@ -26,7 +26,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.set('port', (process.env.PORT || 5000));
-app.set('tokenKey', process.env.TOKENKEY || config.jwt_sign_key);
 
 app.get('/', function(request, response) {
   return response.send({ response: "Welcome to the API." })

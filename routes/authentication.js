@@ -1,3 +1,8 @@
+try {
+  var config = require('./config.json');
+} catch (error) {
+  var config;
+}
 var passwordEncryption = require('../utils/passwordEncryption.js');
 var User = require('../models/user.js');
 
@@ -23,7 +28,7 @@ module.exports = function(request, response) {
               token: user.apiKey
             });
           } else {
-            var token = jwt.sign(user, app.get('tokenKey'));
+            var token = jwt.sign(user, process.env.TOKENKEY || config.jwt_sign_key);
             user.apiKey = token;
             user.save(function(error) {
               if(error) {
