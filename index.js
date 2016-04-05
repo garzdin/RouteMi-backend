@@ -32,10 +32,10 @@ app.get('/', function(request, response) {
 
 app.post('/authenticate', function(request, response) {
   if(!request.body.username || !request.body.password) {
-    response.send{(
+    response.send({
       success: false,
       message: "Provide a username and a password."
-    )};
+    });
   }
   User.findOne({ username: request.body.username }, function(error, user) {
     if(error) {
