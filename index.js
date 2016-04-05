@@ -33,7 +33,7 @@ app.use(function(request, response, next) {
   if (token) {
     jwt.verify(token, app.get('tokenKey'), function(error, decoded) {
       if (error) {
-        return response.json({ success: false, message: 'Failed to authenticate token.' });
+        return response.send({ success: false, message: 'Failed to authenticate token.' });
       } else {
         request.decoded = decoded;
         next();
