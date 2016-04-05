@@ -1,7 +1,7 @@
 var bcrypt = require('bcrypt-nodejs');
 
 exports.cryptPassword = function(password, callback) {
-    bcrypt.hash(password, 10, function(error, hash) {
+    bcrypt.hash(password, 10, null, function(error, hash) {
       if(error) {
         return callback(error, null);
       }
