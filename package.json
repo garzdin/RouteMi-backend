@@ -11,5 +11,8 @@
     "url": "https://git.heroku.com/routemiapi.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
 }
