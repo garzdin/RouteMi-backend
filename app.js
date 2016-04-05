@@ -9,7 +9,7 @@ var tokenMiddleware = require('./middleware/token.js');
 var authenticationModule = require('./routes/authentication.js');
 var accountModule = require('./routes/accounts.js');
 
-mongoose.connect(process.env.MONGOLAB_URL);
+mongoose.connect(process.env.MONGOLAB_URL || 'mongodb://apiuser:4pv-aeh-PbH-Btw@ds013300.mlab.com:13300/routemiapi');
 
 var db = mongoose.connection;
 
@@ -21,7 +21,7 @@ db.once('open', function() {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.set('port', (process.env.PORT));
+app.set('port', (process.env.PORT || 5000));
 
 app.get('/', function(request, response) {
   return response.send({ response: "Welcome to the API." })
