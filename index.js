@@ -1,5 +1,13 @@
 var express = require('express');
 var app = express();
+var mongoose = require('mongoose');
+mongoose.connect(process.env.MONGOLAB_URL || 'mongodb://apiuser:4pv-aeh-PbH-Btw@ds013300.mlab.com:13300/routemiapi');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('Successfully connected to MongoLab.');
+});
 
 app.set('port', (process.env.PORT || 5000));
 
