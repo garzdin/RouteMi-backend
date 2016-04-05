@@ -30,7 +30,7 @@ app.get('/', function(request, response) {
   response.send({ response: "Welcome to the API." })
 });
 
-app.get('/authenticate', function(request, response) {
+app.post('/authenticate', function(request, response) {
   User.findOne({ username: request.body.username }, function(error, user) {
     if(error) {
       response.send({
