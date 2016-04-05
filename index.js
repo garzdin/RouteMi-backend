@@ -22,6 +22,10 @@ app.get('/', function(request, response) {
   response.send({response: "Welcome to the API."})
 });
 
+app.get('/kittens', function(request, response) {
+  response.send({kittens: Kitten.find()})
+});
+
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
