@@ -41,8 +41,7 @@ app.post('/register', function(request, response) {
       if(error) {
         response.send({
           success: false,
-          message: error,
-          well: "Something went wrong"
+          message: error
         });
       } else {
         var user = new User({

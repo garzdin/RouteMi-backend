@@ -5,7 +5,7 @@ exports.cryptPassword = function(password, callback) {
       if(error) {
         return callback(error);
       }
-      return callback(error, hash);
+      return callback(null, hash);
     });
 };
 
