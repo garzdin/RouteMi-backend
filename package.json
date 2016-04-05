@@ -1,7 +1,7 @@
 {
   "name": "routemiapi",
   "version": "1.0.0",
-  "description": "",
+  "description": "The API node.js app for the RouteMiAPI app.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,9 +10,12 @@
     "type": "git",
     "url": "https://git.heroku.com/routemiapi.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Teodor Garzdin",
+  "license": "SEE LICENCE FILE",
   "dependencies": {
     "express": "^4.13.4"
+  },
+  "engines": {
+    "node": "5.3.0"
   }
 }
