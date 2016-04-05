@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/', function(request, response) {
-  response.send({response: "Welcome to the API."})
+  response.send({ response: "Welcome to the API." })
 });
 
 app.post('/kitten', function(request, response) {
@@ -25,10 +25,10 @@ app.post('/kitten', function(request, response) {
     var fluffy = new Kitten({ name: request.body.name });
     fluffy.save(function(error, fluffy) {
       if(error) return response.send({ error: error });
-      response.send("Kitten saved successfully");
+      response.send({ response: "Kitten saved successfully" });
     });
   } else {
-    response.send("You didn't supply a name");
+    response.send({ error: "You didn't supply a name" });
   }
 });
 
