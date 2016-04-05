@@ -23,7 +23,15 @@ app.get('/', function(request, response) {
 });
 
 app.get('/kittens', function(request, response) {
-  response.send({kittens: Kitten.find()})
+  Kitten.find({}, function(error, kittens) {
+    var kittensMap = {};
+
+    kittens.forEach(function(kitten) {
+      kittensMap[kitten._id] = kitten;
+    });
+
+    response.send({kittens: kittensMap});
+  });
 });
 
 app.listen(app.get('port'), function() {
