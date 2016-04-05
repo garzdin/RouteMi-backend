@@ -9,9 +9,15 @@ db.once('open', function() {
   console.log('Successfully connected to MongoLab.');
 });
 
+var fluffy = new Kitten({ name: 'Fluffy' });
+
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/', function(request, response) {
+  fluffy.save(function(error, fluffy) {
+    if(error) return console.log(error);
+    console.log(kitten: fluffy);
+  });
   response.send({response: "Welcome to the API."})
 });
 
