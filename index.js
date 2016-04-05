@@ -41,9 +41,9 @@ app.post('/authenticate', function(request, response) {
     if(error) {
       response.send({
         success: false,
-        message: "User not found"
+        message: error
       });
-    } else {
+    } else if(user) {
       passwordEncryption.comparePassword(request.body.password, user.password, function(error, isValid) {
         if(isValid) {
           var token = jwt.sign(user, app.get('tokenKey'));
@@ -58,6 +58,11 @@ app.post('/authenticate', function(request, response) {
             message: "Wrong password."
           });
         }
+      });
+    } else {
+      response.send({
+        success: false,
+        message: "User not found."
       });
     }
   });
