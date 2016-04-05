@@ -88,21 +88,36 @@ app.post('/authenticate', function(request, response) {
         message: error
       });
     } else if(user) {
-      passwordEncryption.comparePassword(request.body.password, user.password, function(error, isValid) {
-        if(isValid) {
-          var token = jwt.sign(user, app.get('tokenKey'));
-          user.apiKey = token;
-          response.send({
-            success: true,
-            token: token
-          });
-        } else {
-          response.send({
-            success: false,
-            message: "Wrong password."
-          });
-        }
-      });
+      if(user.apiKey) {
+        response.send({
+          success: false,
+          message: "User already has an API key."
+        });
+      } else {
+        passwordEncryption.comparePassword(request.body.password, user.password, function(error, isValid) {
+          if(isValid) {
+            var token = jwt.sign(user, app.get('tokenKey'));
+            user.apiKey = token;
+            user.save(function(error) {
+              if(error) {
+                response.send({
+                  success: false,
+                  token: error
+                });
+              }
+            });
+            response.send({
+              success: true,
+              token: token
+            });
+          } else {
+            response.send({
+              success: false,
+              message: "Wrong password."
+            });
+          }
+        });
+      }
     } else {
       response.send({
         success: false,
