@@ -43,7 +43,7 @@ app.post('/register', function(request, response) {
           success: false,
           message: error
         });
-      } else {
+      } else if(hashedPassword) {
         var user = new User({
           username: request.body.username,
           password: hashedPassword,
@@ -61,6 +61,11 @@ app.post('/register', function(request, response) {
           }
         });
         user.apiKey = jwt.sign(user, app.get('tokenKey'));
+      } else {
+        response.send({
+          success: false,
+          message: "Invalid password."
+        });
       }
     });
   }
