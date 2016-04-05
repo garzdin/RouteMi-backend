@@ -1,11 +1,18 @@
 var bcrypt = require('bcrypt-nodejs');
+var saltRound = 10;
 
 exports.cryptPassword = function(password, callback) {
-  bcrypt.hash(password, 10, null, function(error, hash) {
+  bcrypt.genSalt(saltRound, function(error, salt) {
     if(error) {
       return callback(error, null);
+    } else {
+      bcrypt.hash(password, salt, null, function(error, hash) {
+        if(error) {
+          return callback(error, null);
+        }
+        return callback(null, hash);
+      });
     }
-    return callback(null, hash);
   });
 };
 
