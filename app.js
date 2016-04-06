@@ -2,11 +2,10 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var User = require('./models/user.js');
-var tokenMiddleware = require('./middleware/token.js');
-var loggingMiddleware = require('./middleware/activity.js')
-var authenticationModule = require('./routes/authentication.js');
-var accountModule = require('./routes/accounts.js');
+var token = require('./middleware/token.js');
+var logging = require('./middleware/logging.js')
+var authentication = require('./routes/authentication.js');
+var account = require('./routes/account.js');
 
 mongoose.connect(process.env.MONGOLAB_URL || 'mongodb://apiuser:4pv-aeh-PbH-Btw@ds013300.mlab.com:13300/routemiapi');
 
@@ -26,11 +25,11 @@ app.get('/', function(request, response) {
   return response.send({ response: "Welcome to the API." })
 });
 
-app.post('/account/create', accountModule.create);
-app.post('/authenticate', authenticationModule);
-app.use(tokenMiddleware);
-app.use(loggingMiddleware);
-app.get('/account', accountModule);
+app.post('/account/create', account.create);
+app.post('/authenticate', authentication);
+app.use(token);
+app.use(logging);
+app.get('/account', account);
 
 app.listen(app.get('port'), function() {
   console.log('RouteMiAPI app is running on port', app.get('port'));
