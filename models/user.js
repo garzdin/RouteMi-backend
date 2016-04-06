@@ -22,7 +22,8 @@ var userSchema = new Schema({
   },
   dateRegistered: {
     type: Date,
-    default: Date.now
+    default: Date.now(),
+    required: true
   },
   lastKnownLocation: {
     longitude: Number,
@@ -30,13 +31,14 @@ var userSchema = new Schema({
   },
   lastActive: {
     type: Date,
-    default: Date.now
+    default: Date.now()
   },
   apiKey: {
     type: String
   },
   isActive: {
-    type: Boolean
+    type: Boolean,
+    required: true
   }
 });
 
