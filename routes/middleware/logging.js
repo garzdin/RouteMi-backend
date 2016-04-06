@@ -1,4 +1,4 @@
-var User = require('../models/user.js');
+var User = require('../../models/user.js');
 
 module.exports = function(request, response, next) {
   var token = request.body.token || request.query.token || request.headers['x-access-token'];

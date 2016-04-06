@@ -2,8 +2,8 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var token = require('./middleware/token.js');
-var logging = require('./middleware/logging.js')
+var token = require('./routes/middleware/token.js');
+var logging = require('./routes/middleware/logging.js')
 var authentication = require('./routes/authentication.js');
 var account = require('./routes/account.js');
 
