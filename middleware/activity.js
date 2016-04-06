@@ -18,6 +18,7 @@ module.exports = function(request, response, next) {
           });
         }
       });
+      next();
     } else {
       return response.send({
         success: false,
@@ -25,5 +26,4 @@ module.exports = function(request, response, next) {
       });
     }
   });
-  next();
 };
