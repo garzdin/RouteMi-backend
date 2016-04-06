@@ -1,10 +1,8 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
 var User = require('./models/user.js');
-var passwordEncryption = require('./utils/passwordEncryption.js');
 var tokenMiddleware = require('./middleware/token.js');
 var authenticationModule = require('./routes/authentication.js');
 var accountModule = require('./routes/accounts.js');
@@ -31,6 +29,21 @@ app.post('/account/create', accountModule.create);
 app.post('/authenticate', authenticationModule);
 app.use(tokenMiddleware);
 app.post('/account/login', accountModule.login);
+app.get('/account', function(request, response) {
+  User.findOne({ apiKey: request.body.token || request.query.token || request.headers['x-access-token'] }, function(error, user) {
+    if(error) {
+      return response.send({
+        success: false,
+        message: error
+      });
+    } else {
+      return response.send({
+        success: true,
+        user: user
+      });
+    }
+  });
+});
 
 app.listen(app.get('port'), function() {
   console.log('RouteMiAPI app is running on port', app.get('port'));
