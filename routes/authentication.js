@@ -40,7 +40,7 @@ module.exports = function(request, response) {
             });
             return response.send({
               success: true,
-              message: "Authenticated successfully."
+              message: "Authenticated successfully.",
               token: token
             });
           }
