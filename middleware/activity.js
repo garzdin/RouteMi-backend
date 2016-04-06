@@ -10,6 +10,14 @@ module.exports = function(request, response, next) {
       });
     } else if(user) {
       user.lastActive = Date.now();
+      user.save(function(error) {
+        if(error) {
+          return response.send({
+            success: false,
+            message: error
+          });
+        }
+      }
     } else {
       return response.send({
         success: false,
