@@ -17,7 +17,7 @@ module.exports = function(request, response, next) {
             message: error
           });
         }
-      }
+      });
     } else {
       return response.send({
         success: false,
