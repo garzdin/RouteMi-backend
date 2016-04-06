@@ -28,6 +28,7 @@ app.get('/', function(request, response) {
 app.post('/account/create', accountModule.create);
 app.post('/authenticate', authenticationModule);
 app.use(tokenMiddleware);
+app.all('/', loggingMiddleware);
 app.post('/account/login', accountModule.login);
 app.get('/account', function(request, response) {
   User.findOne({ apiKey: request.body.token || request.query.token || request.headers['x-access-token'] }, function(error, user) {
