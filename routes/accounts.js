@@ -1,6 +1,22 @@
 var passwordEncryption = require('../utils/passwordEncryption.js');
 var User = require('../models/user.js');
 
+module.exports = function(request, response) {
+  User.findOne({ apiKey: request.body.token || request.query.token || request.headers['x-access-token'] }, function(error, user) {
+    if(error) {
+      return response.send({
+        success: false,
+        message: error
+      });
+    } else {
+      return response.send({
+        success: true,
+        user: user
+      });
+    }
+  });
+};
+
 module.exports.create = function(request, response) {
   if(!request.body.username || !request.body.password || !request.body.email) {
     return response.send({
@@ -43,45 +59,4 @@ module.exports.create = function(request, response) {
       }
     });
   }
-};
-
-module.exports.login = function(request, response) {
-  if(!request.body.username || !request.body.password) {
-    return response.send({
-      success: false,
-      message: "Provide a username and a password."
-    });
-  }
-  User.findOne({ username: request.body.username }, function(error, user) {
-    if(error) {
-      return response.send({
-        success: false,
-        message: error
-      });
-    } else if(user) {
-      passwordEncryption.comparePassword(request.body.password, user.password, function(error, isValid) {
-        if(error) {
-          return response.send({
-            success: false,
-            message: "Password validation error."
-          });
-        } else if(isValid) {
-          return response.send({
-            success: true,
-            message: "Logged in successfully."
-          });
-        } else {
-          return response.send({
-            success: false,
-            message: "Wrong password."
-          });
-        }
-      });
-    } else {
-      return response.send({
-        success: false,
-        message: "User not found."
-      });
-    }
-  });
 };

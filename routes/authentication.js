@@ -16,7 +16,12 @@ module.exports = function(request, response) {
       });
     } else if(user) {
       passwordEncryption.comparePassword(request.body.password, user.password, function(error, isValid) {
-        if(isValid) {
+        if(error) {
+          return response.send({
+            success: false,
+            message: "Password validation error."
+          });
+        } else if(isValid) {
           if(user.apiKey) {
             return response.send({
               success: true,
@@ -35,6 +40,7 @@ module.exports = function(request, response) {
             });
             return response.send({
               success: true,
+              message: "Authenticated successfully."
               token: token
             });
           }

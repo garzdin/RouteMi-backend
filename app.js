@@ -30,22 +30,7 @@ app.post('/account/create', accountModule.create);
 app.post('/authenticate', authenticationModule);
 app.use(tokenMiddleware);
 app.use(loggingMiddleware);
-app.post('/account/login', accountModule.login);
-app.get('/account', function(request, response) {
-  User.findOne({ apiKey: request.body.token || request.query.token || request.headers['x-access-token'] }, function(error, user) {
-    if(error) {
-      return response.send({
-        success: false,
-        message: error
-      });
-    } else {
-      return response.send({
-        success: true,
-        user: user
-      });
-    }
-  });
-});
+app.get('/account', accountModule);
 
 app.listen(app.get('port'), function() {
   console.log('RouteMiAPI app is running on port', app.get('port'));
