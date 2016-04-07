@@ -14,8 +14,10 @@ module.exports = function(request, response) {
         account: {
           username: user.username,
           email: user.email,
-          active: user.isActive,
-          apiKey: user.apiKey
+          isActive: user.isActive,
+          dateRegistered: user.dateRegistered,
+          lastActive: user.lastActive,
+          apiKey: user.apiKey,
         }
       });
     }
