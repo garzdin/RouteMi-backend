@@ -6,6 +6,7 @@ var token = require('./routes/middleware/token');
 var logging = require('./routes/middleware/logging')
 var authentication = require('./routes/authentication');
 var account = require('./routes/account');
+var route = require('./routes/route');
 
 mongoose.connect(process.env.MONGOLAB_URL || 'mongodb://apiuser:4pv-aeh-PbH-Btw@ds013300.mlab.com:13300/routemiapi');
 
@@ -30,6 +31,7 @@ app.post('/authenticate', authentication);
 app.use(token);
 app.use(logging);
 app.get('/account', account);
+app.post('/route', route.create);
 
 app.listen(app.get('port'), function() {
   console.log('RouteMiAPI app is running on port', app.get('port'));
