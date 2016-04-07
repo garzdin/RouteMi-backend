@@ -32,7 +32,7 @@ app.use(token);
 app.use(logging);
 app.get('/account', account);
 app.get('/routes', route);
-app.post('/route', route.create);
+app.post('/route/create', route.create);
 app.put('/route/update/:id', route.update);
 app.delete('/route/delete/:id', route.delete);
 
