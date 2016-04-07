@@ -15,7 +15,14 @@ var poiSchema = new Schema({
   coordinates: {
     latitude: Number,
     longitude: Number
+  },
+  route: {
+    type: String,
+    required: true
   }
+},
+{
+  timestamps: {}
 });
 
 module.exports = mongoose.model('POI', poiSchema);

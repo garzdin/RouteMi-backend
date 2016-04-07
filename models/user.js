@@ -20,18 +20,9 @@ var userSchema = new Schema({
   lastName: {
     type: String
   },
-  dateRegistered: {
-    type: Date,
-    default: Date.now(),
-    required: true
-  },
   lastKnownLocation: {
     longitude: Number,
     latitude: Number
-  },
-  lastActive: {
-    type: Date,
-    default: Date.now()
   },
   apiKey: {
     type: String
@@ -39,7 +30,14 @@ var userSchema = new Schema({
   isActive: {
     type: Boolean,
     required: true
+  },
+  lastActive: {
+    type: Date,
+    default: Date.now()
   }
+},
+{
+  timestamps: {}
 });
 
 module.exports = mongoose.model('User', userSchema);
