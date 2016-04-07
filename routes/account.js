@@ -11,7 +11,12 @@ module.exports = function(request, response) {
     } else {
       return response.send({
         success: true,
-        user: user
+        account: {
+          username: user.username,
+          email: user.email,
+          active: user.isActive,
+          apiKey: user.apiKey
+        }
       });
     }
   });
