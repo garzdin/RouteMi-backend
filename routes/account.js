@@ -1,5 +1,5 @@
-var passwordEncryption = require('../utils/passwordEncryption.js');
-var User = require('../models/user.js');
+var passwordEncryption = require('../utils/passwordEncryption');
+var User = require('../models/user');
 
 module.exports = function(request, response) {
   User.findOne({ apiKey: request.body.token || request.query.token || request.headers['x-access-token'] }, function(error, user) {

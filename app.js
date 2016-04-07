@@ -2,10 +2,10 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var token = require('./routes/middleware/token.js');
-var logging = require('./routes/middleware/logging.js')
-var authentication = require('./routes/authentication.js');
-var account = require('./routes/account.js');
+var token = require('./routes/middleware/token');
+var logging = require('./routes/middleware/logging')
+var authentication = require('./routes/authentication');
+var account = require('./routes/account');
 
 mongoose.connect(process.env.MONGOLAB_URL || 'mongodb://apiuser:4pv-aeh-PbH-Btw@ds013300.mlab.com:13300/routemiapi');
 

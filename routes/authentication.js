@@ -1,5 +1,5 @@
-var passwordEncryption = require('../utils/passwordEncryption.js');
-var User = require('../models/user.js');
+var passwordEncryption = require('../utils/passwordEncryption');
+var User = require('../models/user');
 
 module.exports = function(request, response) {
   if(!request.body.username || !request.body.password) {
