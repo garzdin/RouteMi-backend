@@ -13,7 +13,7 @@ module.exports = function(request, response) {
         if(error) {
           return response.send({
             success: false,
-            message: "User not found."
+            message: error
           });
         } else if(routes) {
           return response.send({
@@ -36,13 +36,7 @@ module.exports = function(request, response) {
   });
 };
 
-module.exports.create = function(request, response) {
-  if(!request.body.name || !request.body.description || !request.body.type) {
-    return response.send({
-      success: false,
-      message: "Please provide a name, a description and a type."
-    });
-  }
+module.exports.single = function(request, response) {
   User.findOne({ apiKey: request.body.token || request.query.token || request.headers['x-access-token'] }, function(error, user) {
     if(error) {
       return response.send({
@@ -50,21 +44,21 @@ module.exports.create = function(request, response) {
         message: error
       });
     } else if(user) {
-      new Route({
-        name: request.body.name,
-        description: request.body.description,
-        type: request.body.type,
-        owner: user._id
-      }).save(function(error) {
+      Route.findOne({ _id: request.params.id, owner: user._id }, function(error, route) {
         if(error) {
           return response.send({
             success: false,
             message: error
           });
-        } else {
+        } else if(route) {
           return response.send({
             success: true,
-            message: "Route created successfully."
+            route: route
+          });
+        } else {
+          return response.send({
+            success: false,
+            message: "Route not found."
           });
         }
       });
@@ -75,6 +69,48 @@ module.exports.create = function(request, response) {
       });
     }
   });
+};
+
+module.exports.create = function(request, response) {
+  if(!request.body.name || !request.body.description || !request.body.type) {
+    return response.send({
+      success: false,
+      message: "Please provide a name, a description and a type."
+    });
+  } else {
+    User.findOne({ apiKey: request.body.token || request.query.token || request.headers['x-access-token'] }, function(error, user) {
+      if(error) {
+        return response.send({
+          success: false,
+          message: error
+        });
+      } else if(user) {
+        new Route({
+          name: request.body.name,
+          description: request.body.description,
+          type: request.body.type,
+          owner: user._id
+        }).save(function(error) {
+          if(error) {
+            return response.send({
+              success: false,
+              message: error
+            });
+          } else {
+            return response.send({
+              success: true,
+              message: "Route created successfully."
+            });
+          }
+        });
+      } else {
+        return response.send({
+          success: false,
+          message: "User not found."
+        });
+      }
+    });
+  }
 };
 
 module.exports.update = function(request, response) {

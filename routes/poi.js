@@ -14,7 +14,7 @@ module.exports = function(request, response) {
         if(error) {
           return response.send({
             success: false,
-            message: "User not found."
+            message: error
           });
         } else if(route) {
           Poi.find({ route: route._id }, function(error, pois) {
@@ -33,7 +33,56 @@ module.exports = function(request, response) {
         } else {
           return response.send({
             success: false,
-            message: "Route found."
+            message: "Route not found."
+          });
+        }
+      });
+    } else {
+      return response.send({
+        success: false,
+        message: "User not found."
+      });
+    }
+  });
+};
+
+module.exports.single = function(request, response) {
+  User.findOne({ apiKey: request.body.token || request.query.token || request.headers['x-access-token'] }, function(error, user) {
+    if(error) {
+      return response.send({
+        success: false,
+        message: error
+      });
+    } else if(user) {
+      Route.findOne({ _id: request.params.route_id, owner: user._id }, function(error, route) {
+        if(error) {
+          return response.send({
+            success: false,
+            message: error
+          });
+        } else if(route) {
+          Poi.findOne({ _id: request.params.id, route: route._id }, function(error, poi) {
+            if(error) {
+              return response.send({
+                success: false,
+                message: error
+              });
+            } else if(poi) {
+              return response.send({
+                success: true,
+                poi: poi
+              });
+            } else {
+              return response.send({
+                success: false,
+                message: "Poi not found."
+              });
+            }
+          });
+        } else {
+          return response.send({
+            success: false,
+            message: "Route not found."
           });
         }
       });
@@ -52,43 +101,44 @@ module.exports.create = function(request, response) {
       success: false,
       message: "Please provide a title."
     });
+  } else {
+    Route.findOne({ _id: request.params.route_id }, function(error, route) {
+      if(error) {
+        return response.send({
+          success: false,
+          message: error
+        });
+      } else if(route) {
+        new Poi({
+          title: request.body.title,
+          subtitle: request.body.subtitle,
+          description: request.body.description,
+          coordinates: {
+            latitude: request.body.latitude,
+            longitude: request.body.longitude
+          },
+          route: route._id
+        }).save(function(error) {
+          if(error) {
+            return response.send({
+              success: false,
+              message: error
+            });
+          } else {
+            return response.send({
+              success: true,
+              message: "Poi created successfully."
+            });
+          }
+        });
+      } else {
+        return response.send({
+          success: false,
+          message: "Route not found."
+        });
+      }
+    });  
   }
-  Route.findOne({ _id: request.params.route_id }, function(error, route) {
-    if(error) {
-      return response.send({
-        success: false,
-        message: error
-      });
-    } else if(route) {
-      new Poi({
-        title: request.body.title,
-        subtitle: request.body.subtitle,
-        description: request.body.description,
-        coordinates: {
-          latitude: request.body.latitude,
-          longitude: request.body.longitude
-        },
-        route: route._id
-      }).save(function(error) {
-        if(error) {
-          return response.send({
-            success: false,
-            message: error
-          });
-        } else {
-          return response.send({
-            success: true,
-            message: "Poi created successfully."
-          });
-        }
-      });
-    } else {
-      return response.send({
-        success: false,
-        message: "Route not found."
-      });
-    }
-  });
 };
 
 module.exports.update = function(request, response) {
