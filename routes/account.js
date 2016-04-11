@@ -11,7 +11,7 @@ module.exports = function(request, response) {
     } else {
       return response.send({
         success: true,
-        account: {
+        user._id: {
           username: user.username,
           email: user.email,
           isActive: user.isActive,
