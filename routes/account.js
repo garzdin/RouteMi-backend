@@ -9,18 +9,24 @@ module.exports = function(request, response) {
         success: false,
         message: error
       });
-    } else {
+    } else if(user) {
       return response.send({
         success: true,
         account: {
-          id: user._id,
           username: user.username,
           email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          lastKnownLocation: user.lastKnownLocation,
           isActive: user.isActive,
           dateRegistered: user.dateRegistered,
           lastActive: user.lastActive,
-          apiKey: user.apiKey,
         }
+      });
+    } else {
+      return response.send({
+        success: false,
+        message: "User not found."
       });
     }
   });
@@ -33,37 +39,63 @@ module.exports.create = function(request, response) {
       message: "Provide a username, a password and an email."
     });
   } else {
-    passwordEncryption.cryptPassword(request.body.password, function(error, hashedPassword) {
+    User.findOne({ username: request.body.username || email: request.body.email }, function(error, user) {
       if(error) {
         return response.send({
           success: false,
           message: error
         });
-      } else if(hashedPassword) {
-        new User({
-          username: request.body.username,
-          password: hashedPassword,
-          email: request.body.email,
-          dateRegistered: Date.now(),
-          lastActive: Date.now(),
-          isActive: true
-        }).save(function(error) {
+      } else if(user) {
+        if(user.username == request.body.username) {
+          return response.send({
+            success: false,
+            message: "Username already exists."
+          });
+        } else if(user.email == request.body.email) {
+          return response.send({
+            success: false,
+            message: "Email already exists."
+          });
+        } else {
+          return response.send({
+            success: false,
+            message: "User already exists."
+          });
+        }
+      } else {
+        passwordEncryption.cryptPassword(request.body.password, function(error, hashedPassword) {
           if(error) {
             return response.send({
               success: false,
               message: error
             });
+          } else if(hashedPassword) {
+            new User({
+              username: request.body.username,
+              password: hashedPassword,
+              email: request.body.email,
+              dateRegistered: Date.now(),
+              lastActive: Date.now(),
+              isActive: true
+            }).save(function(error) {
+              if(error) {
+                return response.send({
+                  success: false,
+                  message: error
+                });
+              } else {
+                return response.send({
+                  success: true,
+                  message: "User created successfully."
+                });
+              }
+            });
           } else {
             return response.send({
-              success: true,
-              message: "User created successfully."
+              success: false,
+              message: "Invalid password."
             });
           }
-        });
-      } else {
-        return response.send({
-          success: false,
-          message: "Invalid password."
         });
       }
     });
@@ -84,11 +116,16 @@ module.exports.reset = function(request, response) {
           success: false,
           message: error
         });
-      } else {
+      } else if(user) {
         user.resetToken = generatedToken;
         return response.send({
           success: true,
           token: generatedToken
+        });
+      } else {
+        return response.send({
+          success: false,
+          message: "User not found."
         });
       }
     });
