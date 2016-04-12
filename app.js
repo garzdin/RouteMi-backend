@@ -16,10 +16,10 @@ app.use(bodyParser.json());
 
 app.post('/account/create', account.create);
 app.post('/authenticate', authentication);
+app.post('/account/reset', account.reset);
 app.use(token);
 app.use(logging);
 app.get('/account', account);
-app.get('/account/reset', account.reset);
 app.get('/routes', route);
 app.get('/route/:id', route.single);
 app.post('/route/create', route.create);
