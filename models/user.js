@@ -34,6 +34,10 @@ var userSchema = new Schema({
   lastActive: {
     type: Date,
     default: Date.now()
+  },
+  resetToken: {
+    type: String,
+    default: null
   }
 },
 {
