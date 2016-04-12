@@ -39,7 +39,7 @@ module.exports.create = function(request, response) {
       message: "Provide a username, a password and an email."
     });
   } else {
-    User.findOne({ username: request.body.username || email: request.body.email }, function(error, user) {
+    User.findOne({$or:[{ username: request.body.username }, { email: request.body.email }]}, function(error, user) {
       if(error) {
         return response.send({
           success: false,
