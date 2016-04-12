@@ -1,4 +1,5 @@
 var passwordEncryption = require('../utils/passwordEncryption');
+var jwt = require('jsonwebtoken');
 var User = require('../models/user');
 
 module.exports = function(request, response) {
