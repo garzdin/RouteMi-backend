@@ -20,6 +20,9 @@ var userSchema = new Schema({
   lastName: {
     type: String
   },
+  profileImage: {
+    type: Buffer
+  },
   lastKnownLocation: {
     longitude: Number,
     latitude: Number

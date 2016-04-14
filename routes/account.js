@@ -1,3 +1,4 @@
+var fs = require('fs');
 var passwordEncryption = require('../utils/passwordEncryption');
 var jwt = require('jsonwebtoken');
 var User = require('../models/user');
@@ -17,6 +18,7 @@ module.exports = function(request, response) {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          profileImage: user.profileImage,
           lastKnownLocation: user.lastKnownLocation,
           isActive: user.isActive,
           dateRegistered: user.dateRegistered,
@@ -70,23 +72,38 @@ module.exports.create = function(request, response) {
               message: error
             });
           } else if(hashedPassword) {
-            new User({
-              username: request.body.username,
-              password: hashedPassword,
-              email: request.body.email,
-              dateRegistered: Date.now(),
-              lastActive: Date.now(),
-              isActive: true
-            }).save(function(error) {
+            fs.readFile(request.body.image, function(error, data) {
               if(error) {
                 return response.send({
                   success: false,
                   message: error
                 });
+              } else if(data) {
+                new User({
+                  username: request.body.username,
+                  password: hashedPassword,
+                  email: request.body.email,
+                  profileImage: data,
+                  dateRegistered: Date.now(),
+                  lastActive: Date.now(),
+                  isActive: true
+                }).save(function(error) {
+                  if(error) {
+                    return response.send({
+                      success: false,
+                      message: error
+                    });
+                  } else {
+                    return response.send({
+                      success: true,
+                      message: "User created successfully."
+                    });
+                  }
+                });
               } else {
                 return response.send({
-                  success: true,
-                  message: "User created successfully."
+                  success: false,
+                  message: "Error parsing image."
                 });
               }
             });

@@ -29,7 +29,7 @@ module.exports = function(request, response) {
               token: user.apiKey
             });
           } else {
-            var token = jwt.sign(user, process.env.TOKENKEY || 'Q353oF8Dp4NX51XJwdG7sIaI43l4JXyeRDClR0TYR5aPKBcUleRkyyprgQBR79U');
+            var token = jwt.sign(user.password, process.env.TOKENKEY || 'Q353oF8Dp4NX51XJwdG7sIaI43l4JXyeRDClR0TYR5aPKBcUleRkyyprgQBR79U');
             user.apiKey = token;
             user.save(function(error) {
               if(error) {
