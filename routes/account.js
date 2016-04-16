@@ -83,8 +83,9 @@ module.exports.create = function(request, response) {
                   username: request.body.username,
                   password: hashedPassword,
                   email: request.body.email,
+                  firstName: request.body.firstName,
+                  lastName: request.body.firstName,
                   profileImage: data,
-                  dateRegistered: Date.now(),
                   lastActive: Date.now(),
                   isActive: true
                 }).save(function(error) {
@@ -127,22 +128,44 @@ module.exports.reset = function(request, response) {
     });
   } else {
     var generatedToken = jwt.sign(request.body.email, process.env.TOKENKEY || 'Q353oF8Dp4NX51XJwdG7sIaI43l4JXyeRDClR0TYR5aPKBcUleRkyyprgQBR79U');
-    User.findOne({ email: request.body.email }, function(error, user) {
+    User.update({ email: request.body.email }, { resetToken: generatedToken } function(error) {
       if(error) {
         return response.send({
           success: false,
           message: error
         });
-      } else if(user) {
-        user.resetToken = generatedToken;
+      } else {
         return response.send({
           success: true,
           token: generatedToken
         });
+      }
+    });
+  }
+};
+
+module.exports.updateLocation = function(request, response) {
+  if(!request.body.latitude || !request.body.longitude) {
+    return response.send({
+      success: false,
+      message: "No coordinates recieved."
+    });
+  } else {
+    User.update({
+      apiKey: request.body.token || request.query.token || request.headers['x-access-token']
+    }, {
+      location.latitude: request.body.latitude,
+      location.longitude: request.body.longitude
+    }, function(error) {
+      if(error) {
+        return response.send({
+          success: false,
+          message: error
+        });
       } else {
         return response.send({
           success: false,
-          message: "User not found."
+          message: "Successfully updated location."
         });
       }
     });

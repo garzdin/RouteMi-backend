@@ -20,6 +20,7 @@ app.post('/account/reset', account.reset);
 app.use(token);
 app.use(logging);
 app.get('/account', account);
+app.put('account/location', account.updateLocation);
 app.get('/routes', route);
 app.get('/route/:id', route.single);
 app.post('/route/create', route.create);
