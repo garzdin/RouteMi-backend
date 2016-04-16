@@ -179,7 +179,7 @@ module.exports.updateLocation = function(request, response) {
           if(error) {
             return response.send({
               success: false,
-              message: error
+              message: "There was an error."
             });
           } else {
             return response.send({
