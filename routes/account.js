@@ -173,8 +173,8 @@ module.exports.updateLocation = function(request, response) {
           message: error
         });
       } else if(user) {
-        user.location.latitude = request.body.latitude;
-        user.location.longitude = request.body.longitude;
+        user.lastKnownLocation.latitude = request.body.latitude;
+        user.lastKnownLocation.longitude = request.body.longitude;
         user.save(function(error) {
           if(error) {
             return response.send({
