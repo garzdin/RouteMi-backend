@@ -165,7 +165,7 @@ module.exports.updateLocation = function(request, response) {
         });
       } else {
         return response.send({
-          success: false,
+          success: true,
           message: "Successfully updated location."
         });
       }
