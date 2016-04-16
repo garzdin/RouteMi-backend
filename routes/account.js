@@ -128,7 +128,7 @@ module.exports.reset = function(request, response) {
     });
   } else {
     var generatedToken = jwt.sign(request.body.email, process.env.TOKENKEY || 'Q353oF8Dp4NX51XJwdG7sIaI43l4JXyeRDClR0TYR5aPKBcUleRkyyprgQBR79U');
-    User.update({ email: request.body.email }, { resetToken: generatedToken } function(error) {
+    User.update({ email: request.body.email }, { resetToken: generatedToken }, function(error) {
       if(error) {
         return response.send({
           success: false,
@@ -154,8 +154,8 @@ module.exports.updateLocation = function(request, response) {
     User.update({
       apiKey: request.body.token || request.query.token || request.headers['x-access-token']
     }, {
-      location.latitude: request.body.latitude,
-      location.longitude: request.body.longitude
+      'location.latitude': request.body.latitude,
+      'location.longitude': request.body.longitude
     }, function(error) {
       if(error) {
         return response.send({
