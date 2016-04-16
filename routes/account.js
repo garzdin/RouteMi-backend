@@ -151,6 +151,7 @@ module.exports.updateLocation = function(request, response) {
       message: "No coordinates recieved."
     });
   } else {
+    console.log("Location received " + request.body.latitude + " " + request.body.longitude));
     User.update({
       apiKey: request.body.token || request.query.token || request.headers['x-access-token']
     }, {
