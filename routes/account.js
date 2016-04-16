@@ -128,16 +128,31 @@ module.exports.reset = function(request, response) {
     });
   } else {
     var generatedToken = jwt.sign(request.body.email, process.env.TOKENKEY || 'Q353oF8Dp4NX51XJwdG7sIaI43l4JXyeRDClR0TYR5aPKBcUleRkyyprgQBR79U');
-    User.update({ email: request.body.email }, { resetToken: generatedToken }, function(error) {
+    User.findOne({ email: request.body.email }, function(error, user) {
       if(error) {
         return response.send({
           success: false,
           message: error
         });
+      } else if(user) {
+        user.resetToken = generatedToken;
+        user.save(function(error) {
+          if(error) {
+            return response.send({
+              success: false,
+              message: error
+            });
+          } else {
+            return response.send({
+              success: true,
+              message: "Reset token has been updated successfully."
+            });
+          }
+        });
       } else {
         return response.send({
-          success: true,
-          token: generatedToken
+          success: false,
+          token: "User not found."
         });
       }
     });
@@ -151,22 +166,32 @@ module.exports.updateLocation = function(request, response) {
       message: "No coordinates recieved."
     });
   } else {
-    console.log("Location received " + request.body.latitude + " " + request.body.longitude);
-    User.update({
-      apiKey: request.body.token || request.query.token || request.headers['x-access-token']
-    }, {
-      'location.latitude': request.body.latitude,
-      'location.longitude': request.body.longitude
-    }, function(error) {
+    User.findOne({ apiKey: request.body.token || request.query.token || request.headers['x-access-token'] }, function(error, user) {
       if(error) {
         return response.send({
           success: false,
           message: error
         });
+      } else if(user) {
+        user.location.latitude = request.body.latitude;
+        user.location.longitude = request.body.longitude;
+        user.save(function(error) {
+          if(error) {
+            return response.send({
+              success: false,
+              message: error
+            });
+          } else {
+            return response.send({
+              success: true,
+              message: "User's location has been updated successfully."
+            });
+          }
+        });
       } else {
         return response.send({
-          success: true,
-          message: "Successfully updated location."
+          success: false,
+          message: "User not found."
         });
       }
     });
