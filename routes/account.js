@@ -175,13 +175,17 @@ module.exports.updateLocation = function(request, response) {
       } else if(user) {
         user.lastKnownLocation.latitude = request.body.latitude;
         user.lastKnownLocation.longitude = request.body.longitude;
+        console.log("Succefully set location.");
         user.save(function(error) {
+          console.log("Started saving.");
           if(error) {
+            console.log("An error occured.");
             return response.send({
               success: false,
-              message: "There was an error."
+              message: error
             });
           } else {
+            console.log("Location was saved.");
             return response.send({
               success: true,
               message: "User's location has been updated successfully."
