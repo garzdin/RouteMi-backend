@@ -161,13 +161,16 @@ module.exports.reset = function(request, response) {
 
 module.exports.updateLocation = function(request, response) {
   if(!request.body.latitude || !request.body.longitude) {
+    console.log("Coordinates missing.");
     return response.send({
       success: false,
       message: "No coordinates recieved."
     });
   } else {
+    console.log("Coordinates present.");
     User.findOne({ apiKey: request.body.token || request.query.token || request.headers['x-access-token'] }, function(error, user) {
       if(error) {
+        console.log("Error finding user.");
         return response.send({
           success: false,
           message: error
